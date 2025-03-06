@@ -1,0 +1,19 @@
+{
+  "name": "Hoarder",
+  "longDescription": "<p>Bookmark Hoarding</p>",
+  "description": "Hoarder.",
+  "tags": [
+    "note",
+    "knowledge",
+    "hierarchical",
+    "open-source",
+    "self-hosted",
+    "linux"
+  ],
+  "repository": "https://github.com/hoarder-app/hoarder",
+  "image": "https://github.com/hoarder-app/hoarder/pkgs/container/hoarder",
+  "supported_architectures": [
+    "amd64",
+    "arm64"
+  ]
+}
