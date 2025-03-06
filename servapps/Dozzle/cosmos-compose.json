@@ -26,7 +26,7 @@
         "DOZZLE_LEVEL=info",
         "DOZZLE_FILTER=status=running"
         {if Context.useSocketProxy}
-          , "DOZZLE_REMOTE_HOST=tcp://{ServiceName}-socket:2375"
+          , "DOZZLE_REMOTE_HOST=tcp://{ServiceName}-socket:2375|Cosmos"
         {/if}
       ],
       "labels": {
@@ -106,7 +106,7 @@
           "DISTRIBUTION=0",
           "EXEC=0",
           "IMAGES=0",
-          "INFO=0",
+          "INFO=1",
           "NETWORKS=0", 
           "NODES=0",
           "PLUGINS=0",
