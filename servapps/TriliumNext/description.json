@@ -1,0 +1,19 @@
+{
+  "name": "TriliumNext",
+  "longDescription": "<p>TriliumNext Notes is a hierarchical note taking application with focus on building large personal knowledge bases.</p>",
+  "description": "TriliumNext Notes is a hierarchical note taking application with focus on building large personal knowledge bases.",
+  "tags": [
+    "note",
+    "knowledge",
+    "hierarchical",
+    "open-source",
+    "self-hosted",
+    "linux"
+  ],
+  "repository": "https://github.com/TriliumNext/Notes/",
+  "image": "https://hub.docker.com/r/triliumnext/notes/",
+  "supported_architectures": [
+    "amd64",
+    "arm64"
+  ]
+}
