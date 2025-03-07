@@ -2,8 +2,16 @@
   "cosmos-installer": {
     "post-install": [
       {
+        "type": "success",
+        "label": "Hoarder is now installed and running. You can access it at {Hostnames.{StaticServiceName}.{StaticServiceName}.host}."
+      },
+      {
         "type": "info",
-        "label": "Hoard stuff"
+        "label": "To enable AI tagging, supply your OpenAI API Key to the Hoarder container as environment variable OPENAI_API_KEY."
+      },
+      {
+        "type": "warning",
+        "label": "Use SignUp to create an initial user, then add a Docker environment variable to the Hoarder container to prevent further registrations.  Set DISABLE_SIGNUPS to true."
       }
     ]
   },
@@ -28,7 +36,7 @@
         "HOARDER_VERSION=release",
         "NEXTAUTH_SECRET={Passwords.0}",
         "MEILI_MASTER_KEY={Passwords.1}",
-        "NEXTAUTH_URL=https://hoarder.home.alluvium.cloud",
+        "NEXTAUTH_URL=https://{Hostnames.{StaticServiceName}.{StaticServiceName}.host}",
         "DATA_DIR=/data"
       ],
       "routes": [
@@ -58,7 +66,7 @@
       "image": "gcr.io/zenika-hub/alpine-chrome:123",
       "restart": "unless-stopped",
       "container_name": "{ServiceName}-chrome",
-      "command": "--no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222 --hide-scrollbars",
+      "command": "chromium-browse --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-address=0.0.0.0 --remote-debugging-port=9222 --hide-scrollbars",
       "labels": {
         "cosmos-stack": "{ServiceName}",
         "cosmos-stack-main": "{ServiceName}"

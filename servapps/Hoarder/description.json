@@ -1,11 +1,12 @@
 {
   "name": "Hoarder",
-  "longDescription": "<p>Bookmark Hoarding</p>",
-  "description": "Hoarder.",
+  "description": "Hoarder is a bookmark-everything app (links, notes, and images)",
+  "longDescription": "<p>Hoarder is a self-hostable bookmark-everything app (links, notes and images) with AI-based automatic tagging and full text search.</p>",
   "tags": [
-    "note",
-    "knowledge",
-    "hierarchical",
+    "bookmarks",
+    "notes",
+    "images",
+    "tagging",
     "open-source",
     "self-hosted",
     "linux"
