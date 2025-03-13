@@ -1,17 +1,16 @@
 {
-  "name": "TriliumNext",
-  "longDescription": "<p>TriliumNext Notes is a hierarchical note taking application with focus on building large personal knowledge bases.</p>",
-  "description": "TriliumNext Notes is a hierarchical note taking application with focus on building large personal knowledge bases.",
+  "name": "GoCron",
+  "longDescription": "<p> A task scheduler built with Go and Vue.js that allows users to specify recurring jobs via a simple YAML configuration file. The scheduler reads job definitions, executes commands at specified times using cron expressions, and passes in environment variables for each job.</p>",
+  "description": "A go based task scheduler with GUI",
   "tags": [
-    "note",
-    "knowledge",
-    "hierarchical",
+    "cron",
+    "gui",
     "open-source",
     "self-hosted",
     "linux"
   ],
-  "repository": "https://github.com/TriliumNext/Notes/",
-  "image": "https://hub.docker.com/r/triliumnext/notes/",
+  "repository": "https://github.com/flohoss/gocron",
+  "image": "https://ghcr.io/flohoss/gocron",
   "supported_architectures": [
     "amd64",
     "arm64"
