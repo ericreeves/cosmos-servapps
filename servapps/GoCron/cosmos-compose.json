@@ -1,0 +1,83 @@
+{
+  "cosmos-installer": {
+    "form": [
+      {
+        "name": "ntfyUrl",
+        "label": "URL to Ntfy Instance",
+        "initialValue": "https://ntfy.sh",
+        "type": "text"
+      },
+      {
+        "name": "ntfyTopic",
+        "label": "Ntfy Topic",
+        "initialValue": "cron",
+        "type": "text"
+      },
+      {
+        "name": "ntfyToken",
+        "label": "Ntfy Token",
+        "type": "text"
+      },
+      {
+        "name": "timeZone",
+        "label": "Time Zone",
+        "initialValue": "America/Chicago",
+        "type": "text"
+      }
+    ]
+  },
+  "minVersion": "0.8.0",
+  "services": {
+    "{ServiceName}": {
+      "image": "ghcr.io/flohoss/gocron:latest",
+      "container_name": "{ServiceName}",
+      "environment": [
+        "NTFY_URL={Context.ntfyUrl}",
+        "NTFY_TOPIC={Context.ntfyTopic}",
+        "TZ={Context.timeZone}"
+        {if Context.ntfyToken}
+        , "NTFY_TOKEN={Context.ntfyToken}"
+        {/if}
+      ],
+      "labels": {
+        "cosmos-persistent-env": "TZ, NTFY_URL, NTFY_TOPIC",
+        "cosmos-force-network-secured": "true",
+        "cosmos-auto-update": "true",
+        "cosmos-icon": "https://ericreeves.github.io/cosmos-servapps/servapps/GoCron/icon.png",
+        "cosmos-stack": "{ServiceName}",
+        "cosmos-stack-main": "{ServiceName}"
+      },
+      "volumes": [
+        {
+          "source": "{ServiceName}-gocron-data",
+          "target": "/app/config",
+          "type": "volume"
+        },
+        {
+          "source": "/var/run/docker.sock",
+          "target": "/var/run/docker.sock",
+          "type": "bind"
+        }
+      ],
+      "routes": [
+        {
+          "name": "{ServiceName}",
+          "description": "Expose {ServiceName} to the web",
+          "useHost": true,
+          "target": "http://{ServiceName}:8156",
+          "mode": "SERVAPP",
+          "Timeout": 14400000,
+          "ThrottlePerMinute": 12000,
+          "BlockCommonBots": true,
+          "SmartShield": {
+            "Enabled": true
+          },
+          "AuthEnabled": true,
+          "AuthAdmin": true
+        }
+      ],
+      "shm_size": "4gb",
+      "restart": "unless-stopped"
+    }
+  }
+}
