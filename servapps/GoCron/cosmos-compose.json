@@ -3,8 +3,8 @@
     "form": [
       {
         "name": "ntfyUrl",
-        "label": "URL to Ntfy Instance",
-        "initialValue": "https://ntfy.sh",
+        "label": "URL to Ntfy Instance (include trailing /)",
+        "initialValue": "https://ntfy.sh/",
         "type": "text"
       },
       {
