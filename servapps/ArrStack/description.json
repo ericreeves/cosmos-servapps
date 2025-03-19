@@ -1,0 +1,18 @@
+{
+  "name": "ArrStack",
+  "description": "ArrStack downloads things.",
+  "longDescription": "<p>ArrStack downloads lots of things...</p>",
+  "tags": [
+    "downloader",
+    "media",
+    "open-source",
+    "self-hosted",
+    "linux"
+  ],
+  "repository": "https://github.com/ericreeves/cosmos-servapps",
+  "image": "https://github.com/ericreeves/cosmos-servapps",
+  "supported_architectures": [
+    "amd64",
+    "arm64"
+  ]
+}

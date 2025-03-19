@@ -1,0 +1,575 @@
+{
+  "cosmos-installer": {
+    "form": [
+      {
+        "name": "mediaPath",
+        "label": "What is the base path to media",
+        "initialValue": "/mnt/cubehd4/media",
+        "type": "text"
+      },
+      {
+        "name": "configPath",
+        "label": "What is the base path to arrstack container configs/data",
+        "initialValue": "/mnt/cubehd4/arrstack",
+        "type": "text"
+      },
+      {
+        "name": "uid",
+        "label": "Numeric UID",
+        "initialValue": "2000",
+        "type": "text"
+      },
+      {
+        "name": "gid",
+        "label": "Numeric GID",
+        "initialValue": "2000",
+        "type": "text"
+      },
+      {
+        "name": "timeZone",
+        "label": "Time Zone",
+        "initialValue": "America/Chicago",
+        "type": "text"
+      },
+      {
+        "name": "vpnUser",
+        "label": "VPN Username",
+        "type": "text"
+      },
+      {
+        "name": "vpnPass",
+        "label": "VPN Password",
+        "type": "text"
+      }
+    ]
+  },
+  "networks": {
+    "vpn_network": {}
+  },
+  "services": {
+    "vpn": {
+      "cap_add": [
+        "NET_ADMIN"
+      ],
+      "container_name": "vpn",
+      "devices": [
+        {
+          "source": "/dev/net/tun",
+          "target": "/dev/net/tun",
+          "permissions": "rw"
+        }
+      ],
+      "environment": {
+        "OPENVPN_CIPHERS": "AES-256-CBC",
+        "OPENVPN_USER": "{Context.vpnUser}",
+        "OPENVPN_PASSWORD": "{Context.vpnPass}",
+        "PORT_FORWARD_ONLY": "off",
+        "VPN_PORT_FORWARDING": "off",
+        "VPN_SERVICE_PROVIDER": "privado",
+        "VPN_TYPE": "openvpn",
+        "SERVER_COUNTRIES": "America"
+      },
+      "image": "qmcgaw/gluetun:v3",
+      "networks": {
+        "vpn_network": {}
+      },
+      "ports": [
+        {
+          "target": 8888,
+          "published": "8888",
+          "protocol": "tcp"
+        },
+        {
+          "target": 8388,
+          "published": "8388",
+          "protocol": "tcp"
+        },
+        {
+          "target": 8388,
+          "published": "8388",
+          "protocol": "udp"
+        },
+        {
+          "target": 8000,
+          "published": "8003",
+          "protocol": "tcp"
+        },
+        {
+          "target": 8080,
+          "published": "8080",
+          "protocol": "tcp"
+        },
+        {
+          "target": 8081,
+          "published": "8081",
+          "protocol": "tcp"
+        },
+        {
+          "target": 8787,
+          "published": "8787",
+          "protocol": "tcp"
+        },
+        {
+          "target": 6767,
+          "published": "6767",
+          "protocol": "tcp"
+        },
+        {
+          "target": 7878,
+          "published": "7878",
+          "protocol": "tcp"
+        },
+        {
+          "target": 8989,
+          "published": "8989",
+          "protocol": "tcp"
+        },
+        {
+          "target": 9696,
+          "published": "9696",
+          "protocol": "tcp"
+        },
+        {
+          "target": 8787,
+          "published": "8787",
+          "protocol": "tcp"
+        }
+      ],
+      "restart": "unless-stopped"
+    },
+    "bazarr": {
+      "container_name": "bazarr",
+      "environment": {
+        "PGID": "{Context.gid}",
+        "PUID": "{Context.uid}",
+        "TZ": "{Context.timeZone}"
+      },
+      "image": "lscr.io/linuxserver/bazarr",
+      "ports": [
+        {
+          "target": 6767,
+          "published": "6767",
+          "protocol": "tcp"
+        }
+      ],
+      "depends_on": {
+        "gluetun": {
+          "condition": "service_started",
+          "restart": true,
+          "required": true
+        }
+      },
+      "network_mode": "service:vpn",
+      "labels": {
+        "cosmos-auto-update": "true",
+        "cosmos-force-network-secured": "true",
+        "cosmos-stack": "{ServiceName}",
+        "cosmos-stack-main": "{ServiceName}"
+      },
+      "restart": "unless-stopped",
+      "volumes": [
+        {
+          "type": "bind",
+          "source": "/etc/localtime",
+          "target": "/etc/localtime",
+          "read_only": true
+        },
+        {
+          "type": "bind",
+          "source": "{Context.mediaPath}",
+          "target": "/data",
+          "bind": {
+            "create_host_path": true
+          }
+        },
+        {
+          "type": "bind",
+          "source": "{Context.configPath}/bazarr",
+          "target": "/config",
+          "bind": {
+            "create_host_path": true
+          }
+        }
+      ]
+    },
+    "lidarr": {
+      "container_name": "lidarr",
+      "environment": {
+        "PGID": "{Context.gid}",
+        "PUID": "{Context.uid}",
+        "TZ": "{Context.timeZone}"
+      },
+      "image": "lscr.io/linuxserver/lidarr",
+      "ports": [
+        {
+          "target": 8686,
+          "published": "8686",
+          "protocol": "tcp"
+        }
+      ],
+      "depends_on": {
+        "gluetun": {
+          "condition": "service_started",
+          "restart": true,
+          "required": true
+        }
+      },
+      "network_mode": "service:vpn",
+      "labels": {
+        "cosmos-auto-update": "true",
+        "cosmos-force-network-secured": "true",
+        "cosmos-stack": "{ServiceName}",
+        "cosmos-stack-main": "{ServiceName}"
+      },
+      "restart": "unless-stopped",
+      "volumes": [
+        {
+          "type": "bind",
+          "source": "/etc/localtime",
+          "target": "/etc/localtime",
+          "read_only": true,
+          "bind": {
+            "create_host_path": true
+          }
+        },
+        {
+          "type": "bind",
+          "source": "{Context.mediaPath}",
+          "target": "/data",
+          "bind": {
+            "create_host_path": true
+          }
+        },
+        {
+          "type": "bind",
+          "source": "{Context.configPath}/lidarr",
+          "target": "/config",
+          "bind": {
+            "create_host_path": true
+          }
+        }
+      ]
+    },
+    "prowlarr": {
+      "container_name": "prowlarr",
+      "environment": {
+        "PGID": "{Context.gid}",
+        "PUID": "{Context.uid}",
+        "TZ": "{Context.timeZone}"
+      },
+      "image": "lscr.io/linuxserver/prowlarr",
+      "ports": [
+        {
+          "target": 9696,
+          "published": "9696",
+          "protocol": "tcp"
+        }
+      ],
+      "depends_on": {
+        "gluetun": {
+          "condition": "service_started",
+          "restart": true,
+          "required": true
+        }
+      },
+      "network_mode": "service:vpn",
+      "labels": {
+        "cosmos-auto-update": "true",
+        "cosmos-force-network-secured": "true",
+        "cosmos-stack": "{ServiceName}",
+        "cosmos-stack-main": "{ServiceName}"
+      },
+      "restart": "unless-stopped",
+      "volumes": [
+        {
+          "type": "bind",
+          "source": "/etc/localtime",
+          "target": "/etc/localtime",
+          "read_only": true,
+          "bind": {
+            "create_host_path": true
+          }
+        },
+        {
+          "type": "bind",
+          "source": "{Context.configPath}/prowlarr",
+          "target": "/config",
+          "bind": {
+            "create_host_path": true
+          }
+        }
+      ]
+    },
+    "qbittorrent": {
+      "container_name": "qbittorrent",
+      "depends_on": {
+        "gluetun": {
+          "condition": "service_started",
+          "restart": true,
+          "required": true
+        }
+      },
+      "network_mode": "service:vpn",
+      "labels": {
+        "cosmos-auto-update": "true",
+        "cosmos-force-network-secured": "true",
+        "cosmos-stack": "{ServiceName}",
+        "cosmos-stack-main": "{ServiceName}"
+      },
+      "environment": {
+        "PGID": "{Context.gid}",
+        "PUID": "{Context.uid}",
+        "TZ": "{Context.timeZone}",
+        "WEBUI_PORT": "8081"
+      },
+      "image": "lscr.io/linuxserver/qbittorrent",
+      "restart": "unless-stopped",
+      "volumes": [
+        {
+          "type": "bind",
+          "source": "/etc/localtime",
+          "target": "/etc/localtime",
+          "read_only": true
+        },
+        {
+          "type": "bind",
+          "source": "{Context.mediaPath}",
+          "target": "/data",
+          "bind": {
+            "create_host_path": true
+          }
+        },
+        {
+          "type": "bind",
+          "source": "{Context.configPath}/qbittorrent",
+          "target": "/config",
+          "bind": {
+            "create_host_path": true
+          }
+        }
+      ]
+    },
+    "radarr": {
+      "container_name": "radarr",
+      "environment": {
+        "PGID": "{Context.gid}",
+        "PUID": "{Context.uid}",
+        "TZ": "{Context.timeZone}"
+      },
+      "image": "lscr.io/linuxserver/radarr",
+      "ports": [
+        {
+          "target": 7878,
+          "published": "7878",
+          "protocol": "tcp"
+        }
+      ],
+      "depends_on": {
+        "gluetun": {
+          "condition": "service_started",
+          "restart": true,
+          "required": true
+        }
+      },
+      "network_mode": "service:vpn",
+      "labels": {
+        "cosmos-auto-update": "true",
+        "cosmos-force-network-secured": "true",
+        "cosmos-stack": "{ServiceName}",
+        "cosmos-stack-main": "{ServiceName}"
+      },
+      "restart": "unless-stopped",
+      "volumes": [
+        {
+          "type": "bind",
+          "source": "/etc/localtime",
+          "target": "/etc/localtime",
+          "read_only": true
+        },
+        {
+          "type": "bind",
+          "source": "{Context.mediaPath}",
+          "target": "/data",
+          "bind": {
+            "create_host_path": true
+          }
+        },
+        {
+          "type": "bind",
+          "source": "{Context.configPath}/radarr",
+          "target": "/config",
+          "bind": {
+            "create_host_path": true
+          }
+        }
+      ]
+    },
+    "readarr": {
+      "container_name": "readarr",
+      "environment": {
+        "PGID": "{Context.gid}",
+        "PUID": "{Context.uid}",
+        "TZ": "{Context.timeZone}"
+      },
+      "image": "lscr.io/linuxserver/readarr:develop",
+      "ports": [
+        {
+          "target": 8787,
+          "published": "8787",
+          "protocol": "tcp"
+        }
+      ],
+      "depends_on": {
+        "gluetun": {
+          "condition": "service_started",
+          "restart": true,
+          "required": true
+        }
+      },
+      "network_mode": "service:vpn",
+      "labels": {
+        "cosmos-auto-update": "true",
+        "cosmos-force-network-secured": "true",
+        "cosmos-stack": "{ServiceName}",
+        "cosmos-stack-main": "{ServiceName}"
+      },
+      "restart": "unless-stopped",
+      "volumes": [
+        {
+          "type": "bind",
+          "source": "/etc/localtime",
+          "target": "/etc/localtime",
+          "read_only": true
+        },
+        {
+          "type": "bind",
+          "source": "{Context.mediaPath}",
+          "target": "/data",
+          "bind": {
+            "create_host_path": true
+          }
+        },
+        {
+          "type": "bind",
+          "source": "{Context.configPath}/readarr",
+          "target": "/config",
+          "bind": {
+            "create_host_path": true
+          }
+        }
+      ]
+    },
+    "sabnzbd": {
+      "container_name": "sabnzbd",
+      "depends_on": {
+        "gluetun": {
+          "condition": "service_started",
+          "restart": true,
+          "required": true
+        }
+      },
+      "environment": {
+        "PGID": "{Context.gid}",
+        "PUID": "{Context.uid}",
+        "TZ": "{Context.timeZone}"
+      },
+      "image": "lscr.io/linuxserver/sabnzbd:latest",
+      "network_mode": "service:gluetun",
+      "restart": "unless-stopped",
+      "volumes": [
+        {
+          "type": "bind",
+          "source": "/etc/localtime",
+          "target": "/etc/localtime",
+          "read_only": true
+        },
+        {
+          "type": "bind",
+          "source": "{Context.mediaPath}",
+          "target": "/data",
+          "bind": {
+            "create_host_path": true
+          }
+        },
+        {
+          "type": "bind",
+          "source": "{Context.configPath}/sabnzbd",
+          "target": "/config",
+          "bind": {
+            "create_host_path": true
+          }
+        }
+      ]
+    },
+    "sonarr": {
+      "container_name": "sonarr",
+      "environment": {
+        "PGID": "{Context.gid}",
+        "PUID": "{Context.uid}",
+        "TZ": "{Context.timeZone}"
+      },
+      "image": "lscr.io/linuxserver/sonarr",
+      "ports": [
+        {
+          "target": 8989,
+          "published": "8989",
+          "protocol": "tcp"
+        }
+      ],
+      "depends_on": {
+        "gluetun": {
+          "condition": "service_started",
+          "restart": true,
+          "required": true
+        }
+      },
+      "network_mode": "service:vpn",
+      "labels": {
+        "cosmos-auto-update": "true",
+        "cosmos-force-network-secured": "true",
+        "cosmos-stack": "{ServiceName}",
+        "cosmos-stack-main": "{ServiceName}"
+      },
+      "restart": "unless-stopped",
+      "volumes": [
+        {
+          "type": "bind",
+          "source": "/etc/localtime",
+          "target": "/etc/localtime",
+          "read_only": true
+        },
+        {
+          "type": "bind",
+          "source": "{Context.mediaPath}",
+          "target": "/data",
+          "bind": {
+            "create_host_path": true
+          }
+        },
+        {
+          "type": "bind",
+          "source": "{Context.configPath}/sonarr",
+          "target": "/config",
+          "bind": {
+            "create_host_path": true
+          }
+        }
+      ]
+    },
+    "watchtower": {
+      "container_name": "watchtower",
+      "environment": {
+        "WATCHTOWER_CLEANUP": "true"
+      },
+      "image": "containrrr/watchtower",
+      "restart": "unless-stopped",
+      "volumes": [
+        {
+          "type": "bind",
+          "source": "/var/run/docker.sock",
+          "target": "/var/run/docker.sock"
+        }
+      ]
+    }
+  }
+}
