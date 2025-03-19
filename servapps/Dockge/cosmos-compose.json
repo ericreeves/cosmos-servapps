@@ -26,7 +26,7 @@
       "labels": {
         "cosmos-force-network-secured": "true",
         "cosmos-auto-update": "true",
-        "cosmos-icon": "https://ericreeves.github.io/cosmos-servapps/servapps/Dockge/icon.svg",
+        "cosmos-icon": "https://ericreeves.github.io/cosmos-servapps/servapps/Dockge/icon.png",
         "cosmos-stack": "{ServiceName}",
         "cosmos-stack-main": "{ServiceName}"
       },
